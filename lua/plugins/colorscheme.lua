@@ -54,6 +54,21 @@ return {
 			hl(0, "CmpItemKindInterface", { fg = palette.dragonAqua, bg = palette.dragonBlack1 })
 			hl(0, "CmpItemKindColor", { fg = palette.dragonAqua, bg = palette.dragonBlack1 })
 			hl(0, "CmpItemKindTypeParameter", { fg = palette.dragonAqua, bg = palette.dragonBlack1 })
+
+			vim.diagnostic.config({
+				signs = {
+					text = {
+						[vim.diagnostic.severity.ERROR] = "●",
+						[vim.diagnostic.severity.WARN] = "●",
+					},
+					linehl = {
+						[vim.diagnostic.severity.ERROR] = "ErrorMsg",
+					},
+					numhl = {
+						[vim.diagnostic.severity.WARN] = "WarningMsg",
+					},
+				},
+			})
 		end,
 	},
 }

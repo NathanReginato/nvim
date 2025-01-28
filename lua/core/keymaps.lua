@@ -18,3 +18,15 @@ keymap.set("n", "<leader>fF", builtin.find_files, {})
 keymap.set("n", "<leader>fw", builtin.live_grep, {})
 keymap.set("n", "<leader>fW", builtin.grep_string, {})
 keymap.set("n", "<leader>fo", builtin.oldfiles, {})
+
+-- Always show left gutter
+vim.o.signcolumn = "yes"
+
+-- Show line numbers and set line numbers to relative
+vim.wo.number = true
+vim.wo.relativenumber = true
+
+-- Set tabs
+vim.o.softtabstop = 2
+vim.o.shiftwidth = 2
+vim.o.expandtab = false

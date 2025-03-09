@@ -12,6 +12,7 @@ return {
 	},
 	config = function()
 		local cmp = require("cmp")
+		local luasnip = require("luasnip")
 		cmp.setup({
 			view = {
 				entries = "custom", -- can be "custom", "wildmenu" or "native"
@@ -36,6 +37,37 @@ return {
 			}, {
 				{ name = "buffer" },
 			}),
+			mapping = {
+				-- Confirm selection with <CR>
+				["<Tab>"] = cmp.mapping.confirm({ select = true }),
+
+				-- Manually trigger completion
+				["<C-Space>"] = cmp.mapping.complete(),
+
+				-- Navigate completion items with Tab/Shift+Tab
+				["<C-n>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						cmp.select_next_item()
+					elseif luasnip.expand_or_jumpable() then
+						luasnip.expand_or_jump()
+					else
+						fallback()
+					end
+				end, { "i", "s" }),
+
+				["<C-p>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						cmp.select_prev_item()
+					elseif luasnip.jumpable(-1) then
+						luasnip.jump(-1)
+					else
+						fallback()
+					end
+				end, { "i", "s" }),
+
+				-- Close the completion menu
+				["<C-e>"] = cmp.mapping.close(),
+			},
 			override = function(colors)
 				local theme = colors.theme
 				return {

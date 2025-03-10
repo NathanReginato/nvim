@@ -1,6 +1,9 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
+		dependencies = {
+			"Hoffs/omnisharp-extended-lsp.nvim",
+		},
 		config = function()
 			local on_attach = function(_, bufnr)
 				vim.keymap.set(
@@ -29,6 +32,12 @@ return {
 				)
 				vim.keymap.set(
 					"n",
+					"<leader>li",
+					vim.diagnostic.setloclist,
+					{ noremap = true, silent = true, desc = "Open Diagnostics List" }
+				)
+				vim.keymap.set(
+					"n",
 					"<leader>lq",
 					vim.diagnostic.setloclist,
 					{ noremap = true, silent = true, desc = "Open Diagnostics List" }
@@ -49,6 +58,71 @@ return {
 				)
 
 				require("telescope").load_extension("ui-select")
+			end
+
+			local on_attach_c_sharp = function(_, bufnr)
+				vim.keymap.set(
+					"n",
+					"<leader>ld",
+					vim.diagnostic.open_float,
+					{ noremap = true, silent = true, desc = "Show Line Diagnostics" }
+				)
+				vim.keymap.set(
+					"n",
+					"<leader>ln",
+					vim.diagnostic.goto_next,
+					{ desc = "Go to Next Diagnostic", buffer = bufnr }
+				)
+				vim.keymap.set(
+					"n",
+					"<leader>lp",
+					vim.diagnostic.goto_prev,
+					{ desc = "Go to Previous Diagnostic", buffer = bufnr }
+				)
+				vim.keymap.set(
+					"n",
+					"<leader>li",
+					vim.diagnostic.setloclist,
+					{ noremap = true, silent = true, desc = "Open Diagnostics List" }
+				)
+				vim.keymap.set(
+					"n",
+					"<leader>lq",
+					vim.diagnostic.setloclist,
+					{ noremap = true, silent = true, desc = "Open Diagnostics List" }
+				)
+
+				vim.keymap.set(
+					"n",
+					"<leader>la",
+					vim.lsp.buf.code_action,
+					{ noremap = true, silent = true, desc = "LSP Code Actions (Telescope)" }
+				)
+
+				vim.keymap.set("n", "gr", function()
+					require("omnisharp_extended").telescope_lsp_references()
+				end, { noremap = true, silent = true })
+
+				vim.keymap.set("n", "gd", function()
+					local results = require("omnisharp_extended").telescope_lsp_definition({ jump_type = "never" })
+					if results and #results > 0 then
+						local file_uri = results[1].uri or results[1].targetUri
+						if file_uri then
+							local file_path = file_uri:gsub("file://", "") -- Remove the file:// prefix
+							vim.cmd("edit " .. file_path)
+						end
+					else
+						print("No definition found")
+					end
+				end, { noremap = true, silent = true })
+
+				vim.keymap.set("n", "<leader>D", function()
+					require("omnisharp_extended").telescope_lsp_type_definition({ jump_type = "tabnew" })
+				end, { noremap = true, silent = true })
+
+				vim.keymap.set("n", "gi", function()
+					require("omnisharp_extended").telescope_lsp_implementation({ jump_type = "tabnew" })
+				end, { noremap = true, silent = true })
 			end
 			-- Set up the Lua language server
 			require("lspconfig").lua_ls.setup({
@@ -145,6 +219,50 @@ return {
 					},
 				},
 				on_attach = on_attach,
+			})
+
+			require("lspconfig").omnisharp.setup({
+
+				cmd = { "dotnet", "/Users/Nate/.config/nvim/omnisharp-osx-arm64-net6.0/OmniSharp.dll" },
+				on_attach = on_attach_c_sharp,
+				settings = {
+					FormattingOptions = {
+						-- Enables support for reading code style, naming convention and analyzer
+						-- settings from .editorconfig.
+						EnableEditorConfigSupport = true,
+						-- Specifies whether 'using' directives should be grouped and sorted during
+						-- document formatting.
+						OrganizeImports = nil,
+					},
+					MsBuild = {
+						-- If true, MSBuild project system will only load projects for files that
+						-- were opened in the editor. This setting is useful for big C# codebases
+						-- and allows for faster initialization of code navigation features only
+						-- for projects that are relevant to code that is being edited. With this
+						-- setting enabled OmniSharp may load fewer projects and may thus display
+						-- incomplete reference lists for symbols.
+						LoadProjectsOnDemand = nil,
+					},
+					RoslynExtensionsOptions = {
+						-- Enables support for roslyn analyzers, code fixes and rulesets.
+						EnableAnalyzersSupport = nil,
+						-- Enables support for showing unimported types and unimported extension
+						-- methods in completion lists. When committed, the appropriate using
+						-- directive will be added at the top of the current file. This option can
+						-- have a negative impact on initial completion responsiveness,
+						-- particularly for the first few completion sessions after opening a
+						-- solution.
+						EnableImportCompletion = nil,
+						-- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+						-- true
+						AnalyzeOpenDocumentsOnly = nil,
+					},
+					Sdk = {
+						-- Specifies whether to include preview versions of the .NET SDK when
+						-- determining which version to use for project loading.
+						IncludePrereleases = true,
+					},
+				},
 			})
 		end,
 	},

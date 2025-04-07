@@ -32,15 +32,23 @@ return {
 				)
 				vim.keymap.set(
 					"n",
-					"<leader>li",
-					vim.diagnostic.setloclist,
-					{ noremap = true, silent = true, desc = "Open Diagnostics List" }
-				)
-				vim.keymap.set(
-					"n",
 					"<leader>lq",
 					vim.diagnostic.setloclist,
 					{ noremap = true, silent = true, desc = "Open Diagnostics List" }
+				)
+
+				vim.keymap.set(
+					"n",
+					"<leader>lr",
+					vim.lsp.buf.rename,
+					{ noremap = true, silent = true, desc = "Rename token" }
+				)
+
+				vim.keymap.set(
+					"n",
+					"<leader>lR",
+					vim.lsp.buf.references,
+					{ noremap = true, silent = true, desc = "Find references" }
 				)
 				local telescope_builtin = require("telescope.builtin")
 
@@ -99,7 +107,14 @@ return {
 					{ noremap = true, silent = true, desc = "LSP Code Actions (Telescope)" }
 				)
 
-				vim.keymap.set("n", "gr", function()
+				vim.keymap.set(
+					"n",
+					"<leader>lr",
+					vim.lsp.buf.rename,
+					{ noremap = true, silent = true, desc = "Rename token" }
+				)
+
+				vim.keymap.set("n", "gR", function()
 					require("omnisharp_extended").telescope_lsp_references()
 				end, { noremap = true, silent = true })
 

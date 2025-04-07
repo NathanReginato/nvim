@@ -280,6 +280,10 @@ return {
 					},
 				},
 			})
+
+			require("lspconfig").sqls.setup({
+				cmd = { "sqls", "-config", "/Users/Nate/.config/nvim/lua/plugins/sqls.yaml" },
+			})
 		end,
 	},
 }

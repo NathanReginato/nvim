@@ -1,0 +1,13 @@
+lowercaseKeywords: false
+connections:
+  - alias: local
+    driver: mssql
+    proto: tcp
+    user: sa
+    passwd: ~Wh4tsUpD0c~
+    host: 127.0.0.1
+    port: 1433
+    dbName: CampMinder_Golden
+    params:
+      autocommit: "true"
+      tls: skip-verify

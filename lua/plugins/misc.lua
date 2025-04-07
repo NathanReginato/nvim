@@ -11,4 +11,8 @@ return {
 			require("gitsigns").setup()
 		end,
 	},
+	{
+		"numToStr/Comment.nvim",
+		opts = {},
+	},
 }

@@ -202,6 +202,9 @@ return {
 								"Azure-Pipelines/**/*.y*l",
 								"Pipelines/*.y*l",
 							},
+							["https://raw.githubusercontent.com/sqls-server/sqls/refs/heads/master/schema.json"] = {
+								"sqls.yaml",
+							},
 						},
 					},
 				},
@@ -227,10 +230,8 @@ return {
 			require("lspconfig").yamlls.setup({
 				settings = {
 					yaml = {
-						schemas = {
-							-- add custom schemas here [ <schema location> ] = <file match pattern>
-							-- ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
-						},
+						-- https://github.com/redhat-developer/yaml-language-server
+						schemas = {},
 					},
 				},
 				on_attach = on_attach,
